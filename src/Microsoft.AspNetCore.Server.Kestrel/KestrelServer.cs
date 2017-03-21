@@ -164,9 +164,14 @@ namespace Microsoft.AspNetCore.Server.Kestrel
                     {
                         var parsedAddress = ServerAddress.FromUrl(address);
 
+                        if (parsedAddress.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                        {
+                            throw new InvalidOperationException($"HTTPS addresses are not supported. Use {nameof(KestrelServerOptions)}.{nameof(KestrelServerOptions.Listen)}() to configure an HTTPS endpoint.");
+                        }
+
                         if (!string.IsNullOrEmpty(parsedAddress.PathBase))
                         {
-                            _logger.LogWarning($"Path base in address {address} is not supported and will be ignored. To specify a path base, use {nameof(IApplicationBuilder)}.UsePathBase().");
+                            throw new InvalidOperationException($"Addresses containing a path base are not supported. Use {nameof(IApplicationBuilder)}.UsePathBase() to configure a path base in your application.");
                         }
 
                         if (parsedAddress.IsUnixPipe)

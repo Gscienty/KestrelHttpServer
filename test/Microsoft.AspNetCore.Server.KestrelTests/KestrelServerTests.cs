@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Server.Kestrel;
@@ -46,6 +47,42 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
                 var exception = Assert.Throws<FormatException>(() => StartDummyApplication(server));
 
                 Assert.Contains("Invalid URL", exception.Message);
+                Assert.Equal(1, testLogger.CriticalErrorsLogged);
+            }
+        }
+
+        [Fact]
+        public void StartWithHttpsAddressThrows()
+        {
+            var testLogger = new TestApplicationErrorLogger { ThrowOnCriticalErrors = false };
+
+            using (var server = CreateServer(new KestrelServerOptions(), testLogger))
+            {
+                server.Features.Get<IServerAddressesFeature>().Addresses.Add("https://127.0.0.1:0");
+
+                var exception = Assert.Throws<InvalidOperationException>(() => StartDummyApplication(server));
+
+                Assert.Equal(
+                    $"HTTPS addresses are not supported. Use {nameof(KestrelServerOptions)}.{nameof(KestrelServerOptions.Listen)}() to configure an HTTPS endpoint.",
+                    exception.Message);
+                Assert.Equal(1, testLogger.CriticalErrorsLogged);
+            }
+        }
+
+        [Fact]
+        public void StartWithPathBaseInAddressThrows()
+        {
+            var testLogger = new TestApplicationErrorLogger { ThrowOnCriticalErrors = false };
+
+            using (var server = CreateServer(new KestrelServerOptions(), testLogger))
+            {
+                server.Features.Get<IServerAddressesFeature>().Addresses.Add("http://127.0.0.1:0/base");
+
+                var exception = Assert.Throws<InvalidOperationException>(() => StartDummyApplication(server));
+
+                Assert.Equal(
+                    $"Addresses containing a path base are not supported. Use {nameof(IApplicationBuilder)}.UsePathBase() to configure a path base in your application.",
+                    exception.Message);
                 Assert.Equal(1, testLogger.CriticalErrorsLogged);
             }
         }
