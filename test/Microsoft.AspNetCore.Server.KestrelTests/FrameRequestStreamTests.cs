@@ -90,6 +90,9 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
             var stream = new FrameRequestStream();
             Assert.Throws<NotSupportedException>(() => stream.BeginWrite(new byte[1], 0, 1, null, null));
         }
+#elif NETCOREAPP2_0
+#else
+#error Target framework needs to be updated
 #endif
 
         [Fact]

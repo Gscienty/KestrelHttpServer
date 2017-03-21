@@ -139,9 +139,11 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
                     SocketFlags.None,
                     null,
                     TaskCreationOptions.None);
-#else
+#elif NETCOREAPP2_0
                 await socket.SendAsync(new[] { new ArraySegment<byte>(new byte[] { 1, 2, 3, 4, 5 }) },
                                        SocketFlags.None);
+#else
+#error Target framework needs to be updated
 #endif
                 socket.Dispose();
             });
@@ -181,7 +183,7 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
                                 var req = new UvWriteReq(new KestrelTrace(new TestKestrelTrace()));
                                 req.Init(loop);
                                 var block = ReadableBuffer.Create(new byte[] { 65, 66, 67, 68, 69 });
-                
+
                                 await req.WriteAsync(
                                     tcp2,
                                     block);
@@ -202,9 +204,11 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
                     SocketFlags.None,
                     null,
                     TaskCreationOptions.None);
-#else
+#elif NETCOREAPP2_0
                 await socket.SendAsync(new[] { new ArraySegment<byte>(new byte[] { 1, 2, 3, 4, 5 }) },
                                        SocketFlags.None);
+#else
+#error Target framework needs to be updated
 #endif
                 socket.Shutdown(SocketShutdown.Send);
                 var buffer = new ArraySegment<byte>(new byte[2048]);
@@ -218,8 +222,10 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
                         SocketFlags.None,
                         null,
                         TaskCreationOptions.None);
-#else
+#elif NETCOREAPP2_0
                     var count = await socket.ReceiveAsync(new[] { buffer }, SocketFlags.None);
+#else
+#error Target framework needs to be updated
 #endif
                     if (count <= 0) break;
                 }

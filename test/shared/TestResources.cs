@@ -11,8 +11,10 @@ namespace Microsoft.AspNetCore.Testing
         private static readonly string _testCertificatePath =
 #if NET46
             Path.Combine(Directory.GetCurrentDirectory(), "testCert.pfx");
-#else
+#elif NETCOREAPP2_0
             Path.Combine(AppContext.BaseDirectory, "testCert.pfx");
+#else
+#error Target framework needs to be updated
 #endif
 
         public static string TestCertificatePath => _testCertificatePath;
