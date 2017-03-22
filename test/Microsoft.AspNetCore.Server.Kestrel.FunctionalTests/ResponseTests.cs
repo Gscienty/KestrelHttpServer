@@ -1374,9 +1374,6 @@ namespace Microsoft.AspNetCore.Server.Kestrel.FunctionalTests
             using (var server = new TestServer(async httpContext =>
             {
                 await httpContext.Response.WriteAsync("hello, world");
-
-                // Force response start
-                await httpContext.Response.Body.FlushAsync();
             }))
             {
                 using (var connection = server.CreateConnection())
