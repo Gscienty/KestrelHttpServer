@@ -166,12 +166,12 @@ namespace Microsoft.AspNetCore.Server.Kestrel
 
                         if (parsedAddress.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
                         {
-                            throw new InvalidOperationException($"HTTPS addresses are not supported. Use {nameof(KestrelServerOptions)}.{nameof(KestrelServerOptions.Listen)}() to configure an HTTPS endpoint.");
+                            throw new InvalidOperationException($"HTTPS endpoints can only be configured using {nameof(KestrelServerOptions)}.{nameof(KestrelServerOptions.Listen)}().");
                         }
 
                         if (!string.IsNullOrEmpty(parsedAddress.PathBase))
                         {
-                            throw new InvalidOperationException($"Addresses containing a path base are not supported. Use {nameof(IApplicationBuilder)}.UsePathBase() to configure a path base in your application.");
+                            throw new InvalidOperationException($"A path base can only be configured using {nameof(IApplicationBuilder)}.UsePathBase().");
                         }
 
                         if (parsedAddress.IsUnixPipe)
