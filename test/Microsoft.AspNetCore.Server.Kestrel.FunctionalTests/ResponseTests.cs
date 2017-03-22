@@ -1369,7 +1369,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.FunctionalTests
         }
 
         [Fact]
-        public async Task WhenResponseAlreadyStartedResponseEndedBeforeDrainingRequestBody()
+        public async Task WhenResponseAlreadyStartedResponseEndedBeforeConsumingRequestBody()
         {
             using (var server = new TestServer(async httpContext =>
             {
@@ -1405,7 +1405,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.FunctionalTests
         }
 
         [Fact]
-        public async Task WhenResponseNotStartedResponseEndedAfterDrainingRequestBody()
+        public async Task WhenResponseNotStartedResponseEndedAfterConsumingRequestBody()
         {
             using (var server = new TestServer(httpContext =>
             {
@@ -1469,6 +1469,52 @@ namespace Microsoft.AspNetCore.Server.Kestrel.FunctionalTests
                         "Connection: close",
                         $"Date: {server.Context.DateHeaderValue}",
                         "Content-Length: 0",
+                        "",
+                        "");
+                }
+            }
+        }
+
+        [Fact]
+        public async Task Sending100ContinueAndResponseSendsChunkTerminatorBeforeConsumingRequestBody()
+        {
+            using (var server = new TestServer(async httpContext =>
+            {
+                await httpContext.Request.Body.ReadAsync(new byte[1], 0, 1);
+                await httpContext.Response.WriteAsync("hello, world");
+            }))
+            {
+                using (var connection = server.CreateConnection())
+                {
+                    await connection.Send(
+                        "POST / HTTP/1.1",
+                        "Content-Length: 2",
+                        "Expect: 100-continue",
+                        "",
+                        "");
+
+                    await connection.Receive(
+                        "HTTP/1.1 100 Continue",
+                        "",
+                        "");
+
+                    await connection.Send(
+                        "a");
+
+                    await connection.Receive(
+                        "HTTP/1.1 200 OK",
+                        $"Date: {server.Context.DateHeaderValue}",
+                        $"Transfer-Encoding: chunked",
+                        "",
+                        "c",
+                        "hello, world",
+                        "");
+
+                    // If the expected behavior is regressed, this will hang because the
+                    // server will try to consume the request body before flushing the chunked
+                    // terminator.
+                    await connection.Receive(
+                        "0",
                         "",
                         "");
                 }
