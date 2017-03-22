@@ -137,7 +137,9 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Internal.Http
                                 {
                                     // If the response has already started, call ProduceEnd() before
                                     // consuming the rest of the request body to prevent
-                                    // delaying clients waiting for the chunk terminator.
+                                    // delaying clients waiting for the chunk terminator:
+                                    //
+                                    // https://github.com/dotnet/corefx/issues/17330#issuecomment-288248663
                                     //
                                     // ProduceEnd() must be called before _application.DisposeContext(), to ensure
                                     // HttpContext.Response.StatusCode is correctly set when
