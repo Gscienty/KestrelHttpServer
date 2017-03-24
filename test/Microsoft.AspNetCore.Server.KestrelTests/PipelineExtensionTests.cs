@@ -36,14 +36,14 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
             var reader = await _pipe.Reader.ReadAsync();
             var numAsStr = number.ToString();
             var expected = Encoding.ASCII.GetBytes(numAsStr);
-            AssertEx.Equal(expected, reader.Buffer.Slice(0, numAsStr.Length).ToSpan());
+            AssertEx.Equal(expected, reader.Buffer.Slice(0, numAsStr.Length).ToArray());
         }
 
         [Theory]
         [InlineData(1)]
         [InlineData(_ulongMaxValueLength / 2)]
         [InlineData(_ulongMaxValueLength - 1)]
-        public async Task WritesNumericAcross(int gapSize)
+        public void WritesNumericAcross(int gapSize)
         {
             var writer = _pipe.Writer.Alloc(100);
             // almost fill up the first block
@@ -54,13 +54,13 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
             writer.WriteNumeric(ulong.MaxValue);
             Assert.NotEqual(bufferLength, writer.Buffer.Length);
 
-            await writer.FlushAsync();
+            writer.FlushAsync().GetAwaiter().GetResult();
 
-            var reader = await _pipe.Reader.ReadAsync();
+            var reader = _pipe.Reader.ReadAsync().GetAwaiter().GetResult();
             var numAsString = ulong.MaxValue.ToString();
             var written = reader.Buffer.Slice(spacer.Length, numAsString.Length);
             Assert.False(written.IsSingleSpan, "The buffer should cross spans");
-            AssertEx.Equal(Encoding.ASCII.GetBytes(numAsString), written.ToSpan());
+            AssertEx.Equal(Encoding.ASCII.GetBytes(numAsString), written.ToArray());
         }
 
         [Theory]
@@ -80,7 +80,7 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
             {
                 AssertEx.Equal(
                     expected,
-                    reader.Buffer.ToSpan());
+                    reader.Buffer.ToArray());
             }
             else
             {
@@ -120,7 +120,7 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
         [InlineData(8, 4)]
         [InlineData(8, 5)]
         [InlineData(100, 48)]
-        public async Task WritesAsciiAcrossBlockBoundaries(int stringLength, int gapSize)
+        public void WritesAsciiAcrossBlockBoundaries(int stringLength, int gapSize)
         {
             var testString = new String(' ', stringLength);
             var writer = _pipe.Writer.Alloc(100);
@@ -133,12 +133,12 @@ namespace Microsoft.AspNetCore.Server.KestrelTests
             writer.WriteAsciiNoValidation(testString);
             Assert.NotEqual(bufferLength, writer.Buffer.Length);
 
-            await writer.FlushAsync();
+            writer.FlushAsync().GetAwaiter().GetResult();
 
-            var reader = await _pipe.Reader.ReadAsync();
+            var reader = _pipe.Reader.ReadAsync().GetAwaiter().GetResult();
             var written = reader.Buffer.Slice(spacer.Length, stringLength);
             Assert.False(written.IsSingleSpan, "The buffer should cross spans");
-            AssertEx.Equal(Encoding.ASCII.GetBytes(testString), written.ToSpan());
+            AssertEx.Equal(Encoding.ASCII.GetBytes(testString), written.ToArray());
         }
 
         public void Dispose()
