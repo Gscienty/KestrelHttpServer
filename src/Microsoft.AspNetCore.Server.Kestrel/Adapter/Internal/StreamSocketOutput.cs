@@ -42,18 +42,18 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Adapter.Internal
                 }
 
                 var writableBuffer = _pipe.Writer.Alloc();
-
                 if (buffer.Count > 0)
                 {
                     if (chunk)
                     {
-                        ChunkWriter.WriteBeginChunkBytes(ref writableBuffer, buffer.Count);
-                        writableBuffer.WriteFast(buffer);
-                        ChunkWriter.WriteEndChunkBytes(ref writableBuffer);
+                        var writer = new WritableBufferWriter(writableBuffer);
+                        ChunkWriter.WriteBeginChunkBytes(ref writer, buffer.Count);
+                        writer.Write(buffer.Array, buffer.Offset, buffer.Count);
+                        ChunkWriter.WriteEndChunkBytes(ref writer);
                     }
                     else
                     {
-                        writableBuffer.WriteFast(buffer);
+                        writableBuffer.Write(buffer);
                     }
                 }
 
