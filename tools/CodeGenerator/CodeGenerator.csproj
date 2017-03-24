@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <StartWorkingDirectory>$(MSBuildThisFileDirectory)..\..\src\Microsoft.AspNetCore.Server.Kestrel.Core\Internal\Http</StartWorkingDirectory>
+    <StartWorkingDirectory>$(MSBuildThisFileDirectory)..\..\src\Kestrel.Core\Internal\Http</StartWorkingDirectory>
     <StartArguments>FrameHeaders.Generated.cs Frame.Generated.cs</StartArguments>
   </PropertyGroup>
 

@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.AspNetCore.Server.Kestrel\Microsoft.AspNetCore.Server.Kestrel.csproj" />
+    <!--
+      Real apps would use a package reference
+      <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="x.y.z" />
+    -->
+    <ProjectReference Include="..\..\src\Kestrel\Kestrel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
+    <RootNamespace>Microsoft.AspNetCore.Server.KestrelTests</RootNamespace>
     <TargetFrameworks>netcoreapp1.1;net46</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netcoreapp1.1</TargetFrameworks>
     <PlatformTarget Condition="'$(TargetFramework)' == 'net46'">x64</PlatformTarget>
@@ -16,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.AspNetCore.Server.Kestrel.Https\Microsoft.AspNetCore.Server.Kestrel.Https.csproj" />
+    <ProjectReference Include="..\..\src\Kestrel.Https\Kestrel.Https.csproj" />
   </ItemGroup>
 
   <ItemGroup>

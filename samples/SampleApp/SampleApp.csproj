@@ -12,9 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--
+      Real apps would use a package reference
+      <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="x.y.z" />
+      <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Https" Version="x.y.z" />
+    -->
     <!-- REVIEW: Having the Https project depend on the non-Core project is breaking since it no longer transitively pulls in UseKestrel() :( -->
-    <ProjectReference Include="..\..\src\Microsoft.AspNetCore.Server.Kestrel\Microsoft.AspNetCore.Server.Kestrel.csproj" />
-    <ProjectReference Include="..\..\src\Microsoft.AspNetCore.Server.Kestrel.Https\Microsoft.AspNetCore.Server.Kestrel.Https.csproj" />
+    <ProjectReference Include="..\..\src\Kestrel\Kestrel.csproj" />
+    <ProjectReference Include="..\..\src\Kestrel.Https\Kestrel.Https.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,6 +3,8 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
+    <AssemblyName>Microsoft.AspNetCore.Server.Kestrel.Core</AssemblyName>
+    <RootNamespace>Microsoft.AspNetCore.Server.Kestrel</RootNamespace>
     <Description>Core components of ASP.NET Core Kestrel cross-platform web server.</Description>
     <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

@@ -3,6 +3,7 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
+    <RootNamespace>Microsoft.AspNetCore.Server.Kestrel.Performance</RootNamespace>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <ServerGarbageCollection>true</ServerGarbageCollection>
@@ -19,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.AspNetCore.Server.Kestrel\Microsoft.AspNetCore.Server.Kestrel.csproj" />
+    <ProjectReference Include="..\..\src\Kestrel\Kestrel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
