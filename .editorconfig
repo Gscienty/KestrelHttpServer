@@ -1,0 +1,23 @@
+# EditorConfig is awesome:http://EditorConfig.org
+root = true
+
+[*]
+indent_style = space
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+# See https://github.com/dotnet/roslyn/blob/master/.editorconfig
+# and https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+dotnet_sort_system_directives_first = true:warning
+
+[*.{xml,csproj,config,props,targets,ruleset,config,resx}]
+indent_size = 2
+
+[*.{json, yml}]
+indent_size = 2
+
+[*.{ps1,sh}]
+indent_size = 4
